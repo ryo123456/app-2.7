@@ -1,0 +1,31 @@
+<form name="frmSearch">
+  <table>
+    <tr class="inputRow">
+      <th>緯度：</th>
+      <td>
+        <input type="text" name="y_rad" class="num" size="5" maxlength="2" value="35">度
+        <input type="text" name="y_min" class="num" size="5" maxlength="2" value="40">分
+        <input type="text" name="y_sec" class="num" size="10" maxlength="6" value="52.9">秒
+      </td>
+    </tr>
+    <tr class="inputRow">
+      <th>経度：</th>
+      <td>
+        <input type="text" name="x_rad" class="num" size="5" maxlength="3" value="139">度
+        <input type="text" name="x_min" class="num" size="5" maxlength="2" value="45">分
+        <input type="text" name="x_sec" class="num" size="10" maxlength="6" value="58.0">秒
+      </td>
+    </tr>
+    <tr class="inputRow">
+      <th>範囲：</th>
+      <td>
+        <input type="text" name="range" class="num" size="8" maxlength="4" value="1.0">km
+      </td>
+    </tr>
+    <tr class="buttonRow">
+      <td colspan="2">
+        <input type="button" value="検索" onclick="javascript: search();">
+        <input type="button" value="Google Mapで位置を確認" onclick="javascript: linkMap();">
+      </td>
+    </tr>
+  </table>
