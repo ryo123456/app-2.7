@@ -7,7 +7,12 @@ from .forms import MyForm
 import geocoder
 import urllib
 import xml.dom.minidom
+import xml.etree.ElementTree as ET
+
 def form_test(request):
+        html=0
+	lat=35.689488
+	lng=139.691706
     	if request.method == "POST":
         	form = MyForm(data=request.POST)  
         	if form.is_valid():  
@@ -18,12 +23,17 @@ def form_test(request):
 			if location.length > 0:
         			lat = location[0].getElementsByTagName('lat')[0].firstChild.data
         			lng = location[0].getElementsByTagName('lng')[0].firstChild.data
-				print(lat,lng)	
+				html=jalan(lat,lng)
+				result(html)	
 		 
     	else:  
         	form = MyForm()
     	return render(request, 'mapapp/index.html', {
         'form': form,
+        'html': html,
+        'lat': lat,
+        'lng': lng,
+        
     })
 
 def geocode(name):
@@ -35,5 +45,38 @@ def geocode(name):
 	buffer = urllib.urlopen(url).read()
 
 	return buffer
+
+def jalan(lat,lng):
+	lat = float(lat) * 1.000106961 - float(lng) * 0.000017467 - 0.004602017
+	lng = float(lng) * 1.000083049 + float(lat) * 0.000046047 - 0.010041046
+	lat = lat * 3600 * 1000
+	lng = lng * 3600 * 1000
+	lat = int(lat)
+	lng = int(lng)
+	url = "http://jws.jalan.net/APIAdvance/HotelSearch/V1/"
+	api_key = "and15e316b9f30"
+	range = 10
+	url = url +  "?order=4&xml_ptn=1&pict_size=0&key=" + api_key + "&x=" + str(lng) +"&y=" + str(lat) + "&range=" + str(range)
+	html = urllib.urlopen(url).read()
+	
+	return html
+
+
+def result(html):
+	#f = open('mapapp/templates/mapapp/test.xml','w')
+	#f.write(html)
+	#f.close()
+	#tree=ET.parse('mapapp/templates/mapapp/test.xml')
+	#root=tree.getroot()
+	root=ET.fromstring(html)
+	#a=root.findtext("HotelAddress")
+	i=4
+	
+	for a in root:
+		tag=a.tag
+		if tag=="{jws}Hotel":
+			print(root[i][o].text)
+			i+=1
+			
 
 
