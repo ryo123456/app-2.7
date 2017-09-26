@@ -9,6 +9,8 @@ import urllib
 import xml.dom.minidom
 import xml.etree.ElementTree as ET
 
+ENCODING = 'utf-8'
+
 def form_test(request):
         html=0
 	lat=35.689488
@@ -24,8 +26,7 @@ def form_test(request):
         			lat = location[0].getElementsByTagName('lat')[0].firstChild.data
         			lng = location[0].getElementsByTagName('lng')[0].firstChild.data
 				html=jalan(lat,lng)
-				result(html)	
-		 
+				hotel=result(html)
     	else:  
         	form = MyForm()
     	return render(request, 'mapapp/index.html', {
@@ -33,6 +34,11 @@ def form_test(request):
         'html': html,
         'lat': lat,
         'lng': lng,
+	'a1' : hotel,
+#	'a2' : hotel[2],
+#	'a3' : hotel[3],
+#	'a4' : hotel[4],
+#	'a5' : hotel[5],
         
     })
 
@@ -71,12 +77,13 @@ def result(html):
 	root=ET.fromstring(html)
 	#a=root.findtext("HotelAddress")
 	i=4
-	
+	hotel = ["A"]
 	for a in root:
 		tag=a.tag
 		if tag=="{jws}Hotel":
-			print(root[i][o].text)
+			print (root[i][1].text)
+			hotel.append(root[i][1].text)
 			i+=1
-			
+	return hotel
 
 
