@@ -15,8 +15,11 @@ def form_test(request):
         html=0
 	lat=35.689488
 	lng=139.691706
+	hotel=["A"]
+	hurl=["A"]
     	if request.method == "POST":
-        	form = MyForm(data=request.POST)  
+        	form = MyForm(data=request.POST)
+		  
         	if form.is_valid():  
             		w=request.POST['text']
 			a=geocode(w)
@@ -27,6 +30,7 @@ def form_test(request):
         			lng = location[0].getElementsByTagName('lng')[0].firstChild.data
 				html=jalan(lat,lng)
 				hotel=result(html)
+				hurl=hotelurl(html)
     	else:  
         	form = MyForm()
     	return render(request, 'mapapp/index.html', {
@@ -34,11 +38,16 @@ def form_test(request):
         'html': html,
         'lat': lat,
         'lng': lng,
-	'a1' : hotel,
-#	'a2' : hotel[2],
-#	'a3' : hotel[3],
-#	'a4' : hotel[4],
-#	'a5' : hotel[5],
+	'a1' : hotel[1],
+	'a2' : hotel[2],
+	'a3' : hotel[3],
+	'a4' : hotel[4],
+	'a5' : hotel[5],
+	'a6' : hurl[1],
+	'a7' : hurl[2],
+	'a8' : hurl[3],
+	'a9' : hurl[4],
+	'a10' : hurl[5],
         
     })
 
@@ -86,4 +95,14 @@ def result(html):
 			i+=1
 	return hotel
 
-
+def hotelurl(html):
+        root=ET.fromstring(html)
+        i=4
+        hurl = ["A"]
+        for a in root:
+                tag=a.tag
+                if tag=="{jws}Hotel":
+                        #print (root[i][6].text)
+                        hurl.append(root[i][6].text)
+                        i+=1
+        return hurl
