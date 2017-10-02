@@ -15,8 +15,8 @@ def form_test(request):
         html=0
 	lat=35.689488
 	lng=139.691706
-	hotel=["A"]
-	hurl=["A"]
+	hotel=["A"," "," "," "," "," "]
+	hurl=["A"," "," "," "," "," "]
     	if request.method == "POST":
         	form = MyForm(data=request.POST)
 		  
