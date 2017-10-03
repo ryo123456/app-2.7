@@ -15,8 +15,11 @@ def form_test(request):
         html=0
 	lat=35.689488
 	lng=139.691706
-	hotel=["A"," "," "," "," "," "]
-	hurl=["A"," "," "," "," "," "]
+	hotel=[" "]*10
+	hurl=[" "]*10
+	image=[" "]*10
+	lat2 = [1]*10
+        lng2 = [1]*10
     	if request.method == "POST":
         	form = MyForm(data=request.POST)
 		  
@@ -29,9 +32,20 @@ def form_test(request):
         			lat = location[0].getElementsByTagName('lat')[0].firstChild.data
         			lng = location[0].getElementsByTagName('lng')[0].firstChild.data
 				html=jalan(lat,lng)
-				hotel=result(html)
-				hurl=hotelurl(html)
-    	else:  
+				hotel=result(html,1)
+				hurl=result(html,6)
+    				image = result(html,9)
+				hlocation = result(html,3)
+				for i in range(5):
+					geo = geocode(hlocation[i+1])
+					dom = xml.dom.minidom.parseString(geo)
+                       			location = dom.getElementsByTagName('location')
+                        		if location.length > 0:
+                                		lat2[i] = location[0].getElementsByTagName('lat')[0].firstChild.data
+                                		lng2[i] = location[0].getElementsByTagName('lng')[0].firstChild.data
+	
+							
+	else:  
         	form = MyForm()
     	return render(request, 'mapapp/index.html', {
         'form': form,
@@ -48,7 +62,14 @@ def form_test(request):
 	'a8' : hurl[3],
 	'a9' : hurl[4],
 	'a10' : hurl[5],
-        
+	'b1' : image[1],
+	'b2' : image[2],
+	'b3' : image[3],
+	'b4' : image[4],
+	'b5' : image[5],
+        'c1': [lat2[0],lat2[1],lat2[2],lat2[3],lat2[4]],
+        'c2': [lng2[0],lng2[1],lng2[2],lng2[3],lng2[4]]
+	
     })
 
 def geocode(name):
@@ -77,7 +98,7 @@ def jalan(lat,lng):
 	return html
 
 
-def result(html):
+def result(html,x):
 	#f = open('mapapp/templates/mapapp/test.xml','w')
 	#f.write(html)
 	#f.close()
@@ -90,19 +111,6 @@ def result(html):
 	for a in root:
 		tag=a.tag
 		if tag=="{jws}Hotel":
-			print (root[i][1].text)
-			hotel.append(root[i][1].text)
+			hotel.append(root[i][x].text)
 			i+=1
 	return hotel
-
-def hotelurl(html):
-        root=ET.fromstring(html)
-        i=4
-        hurl = ["A"]
-        for a in root:
-                tag=a.tag
-                if tag=="{jws}Hotel":
-                        #print (root[i][6].text)
-                        hurl.append(root[i][6].text)
-                        i+=1
-        return hurl

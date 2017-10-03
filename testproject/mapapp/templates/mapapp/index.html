@@ -9,12 +9,12 @@
        * element that contains the map. */
       #map {
         height: 100%;
-	top: 50%;
+	top: 25%;
       }
       /* Optional: Makes the sample page fill the window. */
       html, body {
-        height: 60%;
-        width: 60%;
+        height: 70%;
+        width: 70%;
 	margin: 10;
         padding: 10;
       }
@@ -26,13 +26,13 @@
       {{ form }}
       <input type="submit" value="送信"/>
     </form>
-    <table border="1" width="700" height="200">
-    	<tr><th>ホテル名</th><th>ホテルURL</th></tr>
-	<tr><td>{{a1}}</td><td><p><a href="{{a6}}"target="_blank">{{a1}}の情報はこちら</a></p></td></tr>
-    	<tr><td>{{a2}}</td><td><p><a href="{{a7}}"target="_blank">{{a2}}の情報はこちら</a></p></td></tr>
-    	<tr><td>{{a3}}</td><td><p><a href="{{a8}}"target="_blank">{{a3}}の情報はこちら</a></p></td></tr>
-    	<tr><td>{{a4}}</td><td><p><a href="{{a9}}"target="_blank">{{a4}}の情報はこちら</a></p></td></tr>
-    	<tr><td>{{a5}}</td><td><p><a href="{{a10}}"target="_blank">{{a5}}の情報はこちら</a></p></td></tr>
+    <table border="1" width="800" height="200">
+    	<tr><th>ホテル名</th><th>写真</th><th>ホテルURL</th></tr>
+	<tr><td>{{a1}}</td><td><img src="{{b1}}" width="90" height="90"></td><td><p><a href="{{a6}}"target="_blank">{{a1}}の情報はこちら</a></p></td></tr>
+    	<tr><td>{{a2}}</td><td><img src="{{b2}}" width="90" height="90"></td><td><p><a href="{{a7}}"target="_blank">{{a2}}の情報はこちら</a></p></td></tr>
+    	<tr><td>{{a3}}</td><td><img src="{{b3}}" width="90" height="90"></td><td><p><a href="{{a8}}"target="_blank">{{a3}}の情報はこちら</a></p></td></tr>
+    	<tr><td>{{a4}}</td><td><img src="{{b4}}" width="90" height="90"></td><td><p><a href="{{a9}}"target="_blank">{{a4}}の情報はこちら</a></p></td></tr>
+    	<tr><td>{{a5}}</td><td><img src="{{b5}}" width="90" height="90"></td><td><p><a href="{{a10}}"target="_blank">{{a5}}の情報はこちら</a></p></td></tr>
     </table>
     <div id="map"></div>
     <script>
@@ -40,9 +40,35 @@
       function initMap() {
         map = new google.maps.Map(document.getElementById('map'), {
           center: {lat: {{lat}}, lng: {{lng}}},
-          zoom: 8
+          zoom: 13
         });
-      }
+	 var m_latlng1 = new google.maps.LatLng({{c1.0}},{{c2.0}});
+	 var marker1 = new google.maps.Marker({
+    	 position: m_latlng1,
+     	 map: map
+  });
+	 var m_latlng2 = new google.maps.LatLng({{c1.1}},{{c2.1}});
+	 var marker2 = new google.maps.Marker({
+    	 position: m_latlng2,
+     	 map: map
+  });
+	 var m_latlng3 = new google.maps.LatLng({{c1.2}},{{c2.2}});
+	 var marker3 = new google.maps.Marker({
+    	 position: m_latlng3,
+     	 map: map
+  });
+	 var m_latlng4 = new google.maps.LatLng({{c1.3}},{{c2.3}});
+	 var marker4 = new google.maps.Marker({
+    	 position: m_latlng4,
+     	 map: map
+  });
+	 var m_latlng5 = new google.maps.LatLng({{c1.4}},{{c2.4}});
+	 var marker5 = new google.maps.Marker({
+    	 position: m_latlng5,
+     	 map: map
+  });
+
+	}
     </script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDfTqBDOAgYhUiE28RjaduSce7cLyzXIRQ&callback=initMap"
     async defer></script>
