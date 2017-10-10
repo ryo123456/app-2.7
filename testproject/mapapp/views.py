@@ -12,7 +12,9 @@ import xml.etree.ElementTree as ET
 ENCODING = 'utf-8'
 
 def form_test(request):
-        html=0
+        index="index2.html"
+	html=0
+	x=0
 	lat=35.689488
 	lng=139.691706
 	hotel=[" "]*10
@@ -24,7 +26,7 @@ def form_test(request):
         	form = MyForm(data=request.POST)
 		  
         	if form.is_valid():  
-            		w=request.POST['text']
+            		w=request.POST['search']
 			a=geocode(w)
 			dom = xml.dom.minidom.parseString(a)
 			location = dom.getElementsByTagName('location')
@@ -33,58 +35,82 @@ def form_test(request):
         			lng = location[0].getElementsByTagName('lng')[0].firstChild.data
 				html=jalan(lat,lng)
 				hotel=result(html,1)
+				x=test(html,1)
 				hurl=result(html,6)
     				image = result(html,9)
 				hlocation = result(html,3)
-				for i in range(5):
+				for i in range(x):
 					geo = geocode(hlocation[i+1])
 					dom = xml.dom.minidom.parseString(geo)
                        			location = dom.getElementsByTagName('location')
                         		if location.length > 0:
                                 		lat2[i] = location[0].getElementsByTagName('lat')[0].firstChild.data
                                 		lng2[i] = location[0].getElementsByTagName('lng')[0].firstChild.data
-	
+				if x==3:
+					index="index3.html"
+				else:
+					index="index.html"
 							
 	else:  
         	form = MyForm()
-    	return render(request, 'mapapp/index.html', {
-        'form': form,
-        'html': html,
-        'lat': lat,
-        'lng': lng,
-	'a1' : hotel[1],
-	'a2' : hotel[2],
-	'a3' : hotel[3],
-	'a4' : hotel[4],
-	'a5' : hotel[5],
-	'a6' : hurl[1],
-	'a7' : hurl[2],
-	'a8' : hurl[3],
-	'a9' : hurl[4],
-	'a10' : hurl[5],
-	'b1' : image[1],
-	'b2' : image[2],
-	'b3' : image[3],
-	'b4' : image[4],
-	'b5' : image[5],
-        'c1': [lat2[0],lat2[1],lat2[2],lat2[3],lat2[4]],
-        'c2': [lng2[0],lng2[1],lng2[2],lng2[3],lng2[4]]
+    	if x ==3:
+		return render(request, 'mapapp/%s'%index, {
+        	'form': form,
+        	'html': html,
+        	'lat': lat,
+        	'lng': lng,
+        	'a1' : hotel[1],
+        	'a2' : hotel[2],
+        	'a3' : hotel[3],
+        	'a6' : hurl[1],
+        	'a7' : hurl[2],
+        	'a8' : hurl[3],
+        	'b1' : image[1],
+        	'b2' : image[2],
+        	'b3' : image[3],
+        	'c1': [lat2[0],lat2[1],lat2[2]],
+        	'c2': [lng2[0],lng2[1],lng2[2]]
+
+    	})
+	else:
+		return render(request, 'mapapp/%s'%index, {
+        	'form': form,
+        	'html': html,
+        	'lat': lat,
+        	'lng': lng,
+		'a1' : hotel[1],
+		'a2' : hotel[2],
+		'a3' : hotel[3],
+		'a4' : hotel[4],
+		'a5' : hotel[5],
+		'a6' : hurl[1],
+		'a7' : hurl[2],
+		'a8' : hurl[3],
+		'a9' : hurl[4],
+		'a10' : hurl[5],
+		'b1' : image[1],
+		'b2' : image[2],
+		'b3' : image[3],
+		'b4' : image[4],
+		'b5' : image[5],
+		'c1': [lat2[0],lat2[1],lat2[2],lat2[3],lat2[4]],
+        	'c2': [lng2[0],lng2[1],lng2[2],lng2[3],lng2[4]]
 	
-    })
+    	})
 
 def geocode(name):
 	ENCODING = 'utf-8'
 	url = u"http://maps.google.com/maps/api/geocode/xml?&language=ja&sensor=false&region=ja&address="
 
 	url = url + urllib.quote(name.encode(ENCODING))
-
+	
 	buffer = urllib.urlopen(url).read()
 
 	return buffer
 
 def jalan(lat,lng):
-	lat = float(lat) * 1.000106961 - float(lng) * 0.000017467 - 0.004602017
-	lng = float(lng) * 1.000083049 + float(lat) * 0.000046047 - 0.010041046
+	lat = float(lat) * 1.000106961 - float(lat) * 0.000017467 - 0.004602017
+	lng = float(lng) * 1.000083049 + float(lng) * 0.000046047 - 0.010041046
 	lat = lat * 3600 * 1000
 	lng = lng * 3600 * 1000
 	lat = int(lat)
@@ -114,3 +140,19 @@ def result(html,x):
 			hotel.append(root[i][x].text)
 			i+=1
 	return hotel
+
+
+
+
+def test(html,x):
+        root=ET.fromstring(html)
+        i=4
+        hotel = ["A"]
+	x=0
+        for a in root:
+                tag=a.tag
+                if tag=="{jws}Hotel":
+                        hotel.append(root[i][x].text)
+                        i+=1
+			x+=1
+        return x
