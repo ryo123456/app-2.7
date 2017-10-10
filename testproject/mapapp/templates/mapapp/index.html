@@ -1,6 +1,8 @@
+{% load staticfiles %} 
 <!DOCTYPE html>
 <html>
   <head>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.css' %}" />
     <title>Simple Map</title>
     <meta name="viewport" content="initial-scale=1.0">
     <meta charset="utf-8">
@@ -26,7 +28,7 @@
       {{ form }}
       <input type="submit" value="送信"/>
     </form>
-    <table border="1" width="800" height="200">
+    <table border="1" width="800" height="200" class="table table-striped">
     	<tr><th>ホテル名</th><th>写真</th><th>ホテルURL</th></tr>
 	<tr><td>{{a1}}</td><td><img src="{{b1}}" width="90" height="90"></td><td><p><a href="{{a6}}"target="_blank">{{a1}}の情報はこちら</a></p></td></tr>
     	<tr><td>{{a2}}</td><td><img src="{{b2}}" width="90" height="90"></td><td><p><a href="{{a7}}"target="_blank">{{a2}}の情報はこちら</a></p></td></tr>
