@@ -20,6 +20,7 @@ def form_test(request):
 	hotel=[" "]*10
 	hurl=[" "]*10
 	image=[" "]*10
+	price=[" "]*10
 	lat2 = [1]*10
         lng2 = [1]*10
     	if request.method == "POST":
@@ -34,10 +35,12 @@ def form_test(request):
         			lat = location[0].getElementsByTagName('lat')[0].firstChild.data
         			lng = location[0].getElementsByTagName('lng')[0].firstChild.data
 				html=jalan(lat,lng)
+				#print(html)
 				hotel=result(html,1)
 				x=test(html,1)
 				hurl=result(html,6)
     				image = result(html,9)
+				price = result(html,17)
 				hlocation = result(html,3)
 				for i in range(x):
 					geo = geocode(hlocation[i+1])
@@ -94,7 +97,9 @@ def form_test(request):
 		'b4' : image[4],
 		'b5' : image[5],
 		'c1': [lat2[0],lat2[1],lat2[2],lat2[3],lat2[4]],
-        	'c2': [lng2[0],lng2[1],lng2[2],lng2[3],lng2[4]]
+        	'c2': [lng2[0],lng2[1],lng2[2],lng2[3],lng2[4]],
+        	'c3': [price[1],price[2],price[3],price[4],price[5]]
+
 	
     	})
 
