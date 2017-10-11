@@ -12,7 +12,78 @@ import xml.etree.ElementTree as ET
 ENCODING = 'utf-8'
 
 def form_test(request):
-        index="index2.html"
+	lat=35.689488
+	lng=139.691706	  
+        form = MyForm()
+	return render(request, 'mapapp/index2.html',{
+        'form': form,
+        'lat': lat,
+        'lng': lng,
+
+    })
+
+def geocode(name):
+	ENCODING = 'utf-8'
+	url = u"http://maps.google.com/maps/api/geocode/xml?&language=ja&sensor=false&region=ja&address="
+
+	url = url + urllib.quote(name.encode(ENCODING))
+	
+	buffer = urllib.urlopen(url).read()
+
+	return buffer
+
+def jalan(lat,lng):
+	lat = float(lat) * 1.000106961 - float(lat) * 0.000017467 - 0.004602017
+	lng = float(lng) * 1.000083049 + float(lng) * 0.000046047 - 0.010041046
+	lat = lat * 3600 * 1000
+	lng = lng * 3600 * 1000
+	lat = int(lat)
+	lng = int(lng)
+	url = "http://jws.jalan.net/APIAdvance/HotelSearch/V1/"
+	api_key = "and15e316b9f30"
+	range = 10
+	url = url +  "?order=4&xml_ptn=1&pict_size=0&key=" + api_key + "&x=" + str(lng) +"&y=" + str(lat) + "&range=" + str(range)
+	html = urllib.urlopen(url).read()
+	
+	return html
+
+
+def result(html,x):
+	#f = open('mapapp/templates/mapapp/test.xml','w')
+	#f.write(html)
+	#f.close()
+	#tree=ET.parse('mapapp/templates/mapapp/test.xml')
+	#root=tree.getroot()
+	root=ET.fromstring(html)
+	#a=root.findtext("HotelAddress")
+	i=4
+	hotel = ["A"]
+	for a in root:
+		tag=a.tag
+		if tag=="{jws}Hotel":
+			hotel.append(root[i][x].text)
+			i+=1
+	return hotel
+
+
+
+
+def count(html,x):
+        root=ET.fromstring(html)
+        i=4
+        hotel = ["A"]
+	x=0
+        for a in root:
+                tag=a.tag
+                if tag=="{jws}Hotel":
+                        hotel.append(root[i][x].text)
+                        i+=1
+			x+=1
+        return x
+
+
+def test(request):
+	index="index.html"
 	html=0
 	x=0
 	lat=35.689488
@@ -20,7 +91,6 @@ def form_test(request):
 	hotel=[" "]*10
 	hurl=[" "]*10
 	image=[" "]*10
-	price=[" "]*10
 	lat2 = [1]*10
         lng2 = [1]*10
     	if request.method == "POST":
@@ -37,10 +107,9 @@ def form_test(request):
 				html=jalan(lat,lng)
 				#print(html)
 				hotel=result(html,1)
-				x=test(html,1)
+				x=count(html,1)
 				hurl=result(html,6)
     				image = result(html,9)
-				price = result(html,17)
 				hlocation = result(html,3)
 				for i in range(x):
 					geo = geocode(hlocation[i+1])
@@ -97,67 +166,8 @@ def form_test(request):
 		'b4' : image[4],
 		'b5' : image[5],
 		'c1': [lat2[0],lat2[1],lat2[2],lat2[3],lat2[4]],
-        	'c2': [lng2[0],lng2[1],lng2[2],lng2[3],lng2[4]],
-        	'c3': [price[1],price[2],price[3],price[4],price[5]]
+        	'c2': [lng2[0],lng2[1],lng2[2],lng2[3],lng2[4]]
 
+    	})	
 	
-    	})
 
-def geocode(name):
-	ENCODING = 'utf-8'
-	url = u"http://maps.google.com/maps/api/geocode/xml?&language=ja&sensor=false&region=ja&address="
-
-	url = url + urllib.quote(name.encode(ENCODING))
-	
-	buffer = urllib.urlopen(url).read()
-
-	return buffer
-
-def jalan(lat,lng):
-	lat = float(lat) * 1.000106961 - float(lat) * 0.000017467 - 0.004602017
-	lng = float(lng) * 1.000083049 + float(lng) * 0.000046047 - 0.010041046
-	lat = lat * 3600 * 1000
-	lng = lng * 3600 * 1000
-	lat = int(lat)
-	lng = int(lng)
-	url = "http://jws.jalan.net/APIAdvance/HotelSearch/V1/"
-	api_key = "and15e316b9f30"
-	range = 10
-	url = url +  "?order=4&xml_ptn=1&pict_size=0&key=" + api_key + "&x=" + str(lng) +"&y=" + str(lat) + "&range=" + str(range)
-	html = urllib.urlopen(url).read()
-	
-	return html
-
-
-def result(html,x):
-	#f = open('mapapp/templates/mapapp/test.xml','w')
-	#f.write(html)
-	#f.close()
-	#tree=ET.parse('mapapp/templates/mapapp/test.xml')
-	#root=tree.getroot()
-	root=ET.fromstring(html)
-	#a=root.findtext("HotelAddress")
-	i=4
-	hotel = ["A"]
-	for a in root:
-		tag=a.tag
-		if tag=="{jws}Hotel":
-			hotel.append(root[i][x].text)
-			i+=1
-	return hotel
-
-
-
-
-def test(html,x):
-        root=ET.fromstring(html)
-        i=4
-        hotel = ["A"]
-	x=0
-        for a in root:
-                tag=a.tag
-                if tag=="{jws}Hotel":
-                        hotel.append(root[i][x].text)
-                        i+=1
-			x+=1
-        return x
