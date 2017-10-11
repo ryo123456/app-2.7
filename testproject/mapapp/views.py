@@ -4,13 +4,15 @@ from __future__ import unicode_literals
 from django.shortcuts import render
 from django.http import HttpResponse
 from .forms import MyForm
+from django.views.decorators.csrf import csrf_protect
 import geocoder
 import urllib
 import xml.dom.minidom
 import xml.etree.ElementTree as ET
+import requests
 
 ENCODING = 'utf-8'
-
+@csrf_protect
 def form_test(request):
 	lat=35.689488
 	lng=139.691706	  
@@ -21,6 +23,96 @@ def form_test(request):
         'lng': lng,
 
     })
+
+
+@csrf_protect
+def test(request):
+	index = "index.html"
+	html = 0
+	x = 0
+	lat = 35.689488
+	lng = 139.691706
+	hotel = [" "] * 10
+	hurl = [" "] * 10
+	image = [" "] * 10
+	lat2 = [1] * 10
+	lng2 = [1] * 10
+	if request.method == "POST":
+		form = MyForm(data=request.POST)
+
+		if form.is_valid():
+			w = request.POST['search']
+			a = geocode(w)
+			dom = xml.dom.minidom.parseString(a)
+			location = dom.getElementsByTagName('location')
+			if location.length > 0:
+				lat = location[0].getElementsByTagName('lat')[0].firstChild.data
+				lng = location[0].getElementsByTagName('lng')[0].firstChild.data
+				html = jalan(lat, lng)
+				hotel = result(html, 1)
+				x = count(html, 1)
+				hurl = result(html, 6)
+				price=scraping(hurl)
+				image = result(html, 9)
+				hlocation = result(html, 3)
+				for i in range(x):
+					geo = geocode(hlocation[i + 1])
+					dom = xml.dom.minidom.parseString(geo)
+					location = dom.getElementsByTagName('location')
+					if location.length > 0:
+						lat2[i] = location[0].getElementsByTagName('lat')[0].firstChild.data
+						lng2[i] = location[0].getElementsByTagName('lng')[0].firstChild.data
+				if x == 3:
+					index = "index3.html"
+				else:
+					index = "index.html"
+
+	else:
+		form = MyForm()
+	if x == 3:
+		return render(request, 'mapapp/%s' % index, {
+			'form': form,
+			'html': html,
+			'lat': lat,
+			'lng': lng,
+			'a1': hotel[1],
+			'a2': hotel[2],
+			'a3': hotel[3],
+			'a6': hurl[1],
+			'a7': hurl[2],
+			'a8': hurl[3],
+			'b1': image[1],
+			'b2': image[2],
+			'b3': image[3],
+			'c1': [lat2[0], lat2[1], lat2[2]],
+			'c2': [lng2[0], lng2[1], lng2[2]]
+
+		})
+	else:
+		return render(request, 'mapapp/%s' % index, {
+			'form': form,
+			'html': html,
+			'lat': lat,
+			'lng': lng,
+			'a1': hotel[1],
+			'a2': hotel[2],
+			'a3': hotel[3],
+			'a4': hotel[4],
+			'a5': hotel[5],
+			'a6': hurl[1],
+			'a7': hurl[2],
+			'a8': hurl[3],
+			'a9': hurl[4],
+			'a10': hurl[5],
+			'b1': image[1],
+			'b2': image[2],
+			'b3': image[3],
+			'b4': image[4],
+			'b5': image[5],
+			'c1': [lat2[0], lat2[1], lat2[2], lat2[3], lat2[4]],
+			'c2': [lng2[0], lng2[1], lng2[2], lng2[3], lng2[4]]
+
+		})
 
 def geocode(name):
 	ENCODING = 'utf-8'
@@ -67,7 +159,6 @@ def result(html,x):
 
 
 
-
 def count(html,x):
         root=ET.fromstring(html)
         i=4
@@ -82,92 +173,8 @@ def count(html,x):
         return x
 
 
-def test(request):
-	index="index.html"
-	html=0
-	x=0
-	lat=35.689488
-	lng=139.691706
-	hotel=[" "]*10
-	hurl=[" "]*10
-	image=[" "]*10
-	lat2 = [1]*10
-        lng2 = [1]*10
-    	if request.method == "POST":
-        	form = MyForm(data=request.POST)
-		  
-        	if form.is_valid():  
-            		w=request.POST['search']
-			a=geocode(w)
-			dom = xml.dom.minidom.parseString(a)
-			location = dom.getElementsByTagName('location')
-			if location.length > 0:
-        			lat = location[0].getElementsByTagName('lat')[0].firstChild.data
-        			lng = location[0].getElementsByTagName('lng')[0].firstChild.data
-				html=jalan(lat,lng)
-				#print(html)
-				hotel=result(html,1)
-				x=count(html,1)
-				hurl=result(html,6)
-    				image = result(html,9)
-				hlocation = result(html,3)
-				for i in range(x):
-					geo = geocode(hlocation[i+1])
-					dom = xml.dom.minidom.parseString(geo)
-                       			location = dom.getElementsByTagName('location')
-                        		if location.length > 0:
-                                		lat2[i] = location[0].getElementsByTagName('lat')[0].firstChild.data
-                                		lng2[i] = location[0].getElementsByTagName('lng')[0].firstChild.data
-				if x==3:
-					index="index3.html"
-				else:
-					index="index.html"
-							
-	else:  
-        	form = MyForm()
-    	if x ==3:
-		return render(request, 'mapapp/%s'%index, {
-        	'form': form,
-        	'html': html,
-        	'lat': lat,
-        	'lng': lng,
-        	'a1' : hotel[1],
-        	'a2' : hotel[2],
-        	'a3' : hotel[3],
-        	'a6' : hurl[1],
-        	'a7' : hurl[2],
-        	'a8' : hurl[3],
-        	'b1' : image[1],
-        	'b2' : image[2],
-        	'b3' : image[3],
-        	'c1': [lat2[0],lat2[1],lat2[2]],
-        	'c2': [lng2[0],lng2[1],lng2[2]]
-
-    	})
-	else:
-		return render(request, 'mapapp/%s'%index, {
-        	'form': form,
-        	'html': html,
-        	'lat': lat,
-        	'lng': lng,
-		'a1' : hotel[1],
-		'a2' : hotel[2],
-		'a3' : hotel[3],
-		'a4' : hotel[4],
-		'a5' : hotel[5],
-		'a6' : hurl[1],
-		'a7' : hurl[2],
-		'a8' : hurl[3],
-		'a9' : hurl[4],
-		'a10' : hurl[5],
-		'b1' : image[1],
-		'b2' : image[2],
-		'b3' : image[3],
-		'b4' : image[4],
-		'b5' : image[5],
-		'c1': [lat2[0],lat2[1],lat2[2],lat2[3],lat2[4]],
-        	'c2': [lng2[0],lng2[1],lng2[2],lng2[3],lng2[4]]
-
-    	})	
+def scraping(hurl):
+	r = requests.get('%s'%hurl[1])
+	#print(r.text)
 	
 

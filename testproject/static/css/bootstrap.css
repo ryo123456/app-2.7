@@ -8,10 +8,13 @@ html {
   font-family: sans-serif;
   -webkit-text-size-adjust: 100%;
       -ms-text-size-adjust: 100%;
+
 }
 body {
   margin: 0;
+  background-color: black;
 }
+
 article,
 aside,
 details,
@@ -1586,6 +1589,7 @@ pre code {
   padding-left: 15px;
   margin-right: auto;
   margin-left: auto;
+
 }
 @media (min-width: 768px) {
   .container {
@@ -1617,6 +1621,7 @@ pre code {
   min-height: 1px;
   padding-right: 15px;
   padding-left: 15px;
+
 }
 .col-xs-1, .col-xs-2, .col-xs-3, .col-xs-4, .col-xs-5, .col-xs-6, .col-xs-7, .col-xs-8, .col-xs-9, .col-xs-10, .col-xs-11, .col-xs-12 {
   float: left;
@@ -1935,9 +1940,11 @@ pre code {
 @media (min-width: 992px) {
   .col-md-1, .col-md-2, .col-md-3, .col-md-4, .col-md-5, .col-md-6, .col-md-7, .col-md-8, .col-md-9, .col-md-10, .col-md-11, .col-md-12 {
     float: left;
+    margin-bottom:10px;
   }
   .col-md-12 {
     width: 100%;
+    margin-bottom:10px;
   }
   .col-md-11 {
     width: 91.66666667%;
