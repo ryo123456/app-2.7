@@ -10,6 +10,8 @@ import urllib
 import xml.dom.minidom
 import xml.etree.ElementTree as ET
 import requests
+import lxml.html
+from bs4 import BeautifulSoup
 
 ENCODING = 'utf-8'
 @csrf_protect
@@ -35,6 +37,7 @@ def test(request):
 	hotel = [" "] * 10
 	hurl = [" "] * 10
 	image = [" "] * 10
+	price = [1]*10
 	lat2 = [1] * 10
 	lng2 = [1] * 10
 	if request.method == "POST":
@@ -52,9 +55,10 @@ def test(request):
 				hotel = result(html, 1)
 				x = count(html, 1)
 				hurl = result(html, 6)
-				price=scraping(hurl)
+				price = hprice(html)
 				image = result(html, 9)
 				hlocation = result(html, 3)
+				htype = result(html,5)
 				for i in range(x):
 					geo = geocode(hlocation[i + 1])
 					dom = xml.dom.minidom.parseString(geo)
@@ -75,17 +79,14 @@ def test(request):
 			'html': html,
 			'lat': lat,
 			'lng': lng,
-			'a1': hotel[1],
-			'a2': hotel[2],
-			'a3': hotel[3],
-			'a6': hurl[1],
-			'a7': hurl[2],
-			'a8': hurl[3],
-			'b1': image[1],
-			'b2': image[2],
-			'b3': image[3],
+			'a1': [hotel[1],hotel[2],hotel[3]],
+			'a2': [hurl[1],hurl[2],hurl[3]],
+			'b1': [image[1],image[2],image[3]],
 			'c1': [lat2[0], lat2[1], lat2[2]],
-			'c2': [lng2[0], lng2[1], lng2[2]]
+			'c2': [lng2[0], lng2[1], lng2[2]],
+			'd1': [price[1],price[2],price[3]],
+			'e1': [hlocation[1],hlocation[2],hlocation[3]],
+			'f1': [htype[1],htype[2],htype[3]]
 
 		})
 	else:
@@ -94,23 +95,14 @@ def test(request):
 			'html': html,
 			'lat': lat,
 			'lng': lng,
-			'a1': hotel[1],
-			'a2': hotel[2],
-			'a3': hotel[3],
-			'a4': hotel[4],
-			'a5': hotel[5],
-			'a6': hurl[1],
-			'a7': hurl[2],
-			'a8': hurl[3],
-			'a9': hurl[4],
-			'a10': hurl[5],
-			'b1': image[1],
-			'b2': image[2],
-			'b3': image[3],
-			'b4': image[4],
-			'b5': image[5],
+			'a1': [hotel[1],hotel[2],hotel[3],hotel[4],hotel[5]],
+			'a2': [hurl[1],hurl[2],hurl[3],hurl[4],hurl[5]],
+			'b1': [image[1],image[2],image[3],image[4],image[5]],
 			'c1': [lat2[0], lat2[1], lat2[2], lat2[3], lat2[4]],
-			'c2': [lng2[0], lng2[1], lng2[2], lng2[3], lng2[4]]
+			'c2': [lng2[0], lng2[1], lng2[2], lng2[3], lng2[4]],
+			'd1': [price[1],price[2],price[3],price[4],price[5]],
+			'e1': [hlocation[1],hlocation[2],hlocation[3],hlocation[4],hlocation[5]],
+                        'f1': [htype[1],htype[2],htype[3],htype[4],htype[5]]
 
 		})
 
@@ -172,9 +164,39 @@ def count(html,x):
 			x+=1
         return x
 
+def hprice(html):
+	root=ET.fromstring(html)
+        i=4
+	price = [" "]
+        x=0
+        for a in root:
+                tag=a.tag
+		tag2=a.tag
+		x=0
+                if tag=="{jws}Hotel":
+                        while tag2 != "{jws}SampleRateFrom":
+				x+=1
+				tag2 = root[i][x].tag
+			price.append(root[i][x].text)
+			i+=1
+        return price
+
+
+
 
 def scraping(hurl):
 	r = requests.get('%s'%hurl[1])
 	#print(r.text)
+	soup = BeautifulSoup(r, "lxml")
+    	for tag in soup.find_all("article") :
+        	id = tag.get('id')
+        	print id
+	url = soup.find("og:url", "content")
+	print (url.get_text())
+
+
+
+
+
 	
 
