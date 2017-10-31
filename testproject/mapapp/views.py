@@ -10,7 +10,7 @@ import urllib
 import xml.dom.minidom
 import xml.etree.ElementTree as ET
 import requests
-import lxml.html
+#import lxml.html
 from bs4 import BeautifulSoup
 
 ENCODING = 'utf-8'
