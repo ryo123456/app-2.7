@@ -10,7 +10,7 @@ import urllib
 import xml.dom.minidom
 import xml.etree.ElementTree as ET
 import requests
-#import lxml.html
+import lxml.html
 from bs4 import BeautifulSoup
 
 ENCODING = 'utf-8'
@@ -59,6 +59,7 @@ def test(request):
 				image = result(html, 9)
 				hlocation = result(html, 3)
 				htype = result(html,5)
+				sss = scraping(hurl)
 				for i in range(x):
 					geo = geocode(hlocation[i + 1])
 					dom = xml.dom.minidom.parseString(geo)
@@ -187,13 +188,18 @@ def hprice(html):
 def scraping(hurl):
 	r = requests.get('%s'%hurl[1])
 	#print(r.text)
-	soup = BeautifulSoup(r, "lxml")
-    	for tag in soup.find_all("article") :
-        	id = tag.get('id')
-        	print id
-	url = soup.find("og:url", "content")
-	print (url.get_text())
+	soup = BeautifulSoup(r.text,"lxml")
+	
+	for link in soup.find_all("link", rel="canonical"):
+		purl=link['href']
 
+	url = purl + "plan/"
+	print(url)
+	r = requests.get(url)
+	soup = BeautifulSoup(r.text,"lxml")
+	for tbody in soup.find_all("td", class_="s12_66"):
+		print(tbody.text)
+	return 5
 
 
 
