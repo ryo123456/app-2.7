@@ -196,7 +196,11 @@ def scraping(hurl):
 	r = requests.get(url)
 	soup = BeautifulSoup(r.text,"lxml")
 	for tbody in soup.find_all("td", class_="s12_66"):
-		print(tbody.text)
+		a=tbody.text.split()
+                a=a[0].replace("\ufffd","")
+                a=a.replace("`","円")
+
+		print(a)
 	return 5
 
 
