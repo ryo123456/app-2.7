@@ -187,9 +187,7 @@ def hprice(html):
 
 def scraping(hurl):
 	r = requests.get('%s'%hurl[1])
-	#print(r.text)
 	soup = BeautifulSoup(r.text,"lxml")
-	
 	for link in soup.find_all("link", rel="canonical"):
 		purl=link['href']
 
