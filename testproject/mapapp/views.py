@@ -59,7 +59,8 @@ def test(request):
 				image = result(html, 9)
 				hlocation = result(html, 3)
 				htype = result(html,5)
-				sss = scraping(hurl)
+				purl = scraping(hurl)
+				print(purl)
 				for i in range(x):
 					geo = geocode(hlocation[i + 1])
 					dom = xml.dom.minidom.parseString(geo)
@@ -87,7 +88,8 @@ def test(request):
 			'c2': [lng2[0], lng2[1], lng2[2]],
 			'd1': [price[1],price[2],price[3]],
 			'e1': [hlocation[1],hlocation[2],hlocation[3]],
-			'f1': [htype[1],htype[2],htype[3]]
+			'f1': [htype[1],htype[2],htype[3]],
+			'purl': purl
 
 		})
 	else:
@@ -103,7 +105,8 @@ def test(request):
 			'c2': [lng2[0], lng2[1], lng2[2], lng2[3], lng2[4]],
 			'd1': [price[1],price[2],price[3],price[4],price[5]],
 			'e1': [hlocation[1],hlocation[2],hlocation[3],hlocation[4],hlocation[5]],
-                        'f1': [htype[1],htype[2],htype[3],htype[4],htype[5]]
+                        'f1': [htype[1],htype[2],htype[3],htype[4],htype[5]],
+			 'purl': purl
 
 		})
 
@@ -187,21 +190,30 @@ def hprice(html):
 
 def scraping(hurl):
 	r = requests.get('%s'%hurl[1])
-	soup = BeautifulSoup(r.text,"lxml")
+	content_type_encoding = r.encoding if r.encoding != 'ISO-8859-1' else None
+	soup = BeautifulSoup(r.content, 'html.parser', from_encoding=content_type_encoding)
+#	soup = BeautifulSoup(r.content,"lxml")
 	for link in soup.find_all("link", rel="canonical"):
 		purl=link['href']
 
 	url = purl + "plan/"
 	print(url)
 	r = requests.get(url)
-	soup = BeautifulSoup(r.text,"lxml")
-	for tbody in soup.find_all("td", class_="s12_66"):
-		a=tbody.text.split()
-                a=a[0].replace("\ufffd","")
-                a=a.replace("`","円")
-
-		print(a)
-	return 5
+	content_type_encoding = r.encoding if r.encoding != 'ISO-8859-1' else None
+	soup = BeautifulSoup(r.content, 'html.parser', from_encoding=content_type_encoding)
+#	soup = BeautifulSoup(r.content,"lxml")
+	#for tbody in soup.find_all("td", class_="s12_66"):
+	#	a=tbody.text.split()
+        #        a=a[0].replace("\ufffd","")
+        #        a=a.replace("`","円")
+	#	print(a)
+#	for tbody in soup.find_all("h2", class_="wb-ba"):
+#		a=tbody.text
+		#a=tbody
+                #a=a[0].replace("\ufffd","")
+                #a=a.replace("`","円")
+#		print (a.rstrip().lstrip())
+	return url
 
 
 
