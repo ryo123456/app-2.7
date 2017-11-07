@@ -38,6 +38,7 @@ def test(request):
 	hurl = [" "] * 10
 	image = [" "] * 10
 	price = [1]*10
+	purl = [" "]*10
 	lat2 = [1] * 10
 	lng2 = [1] * 10
 	if request.method == "POST":
@@ -59,7 +60,11 @@ def test(request):
 				image = result(html, 9)
 				hlocation = result(html, 3)
 				htype = result(html,5)
-				purl = scraping(hurl)
+				if x==3:
+					purl = scraping(hurl,3)
+				elif x>=5:
+					purl = scraping(hurl,5)
+				
 				print(purl)
 				for i in range(x):
 					geo = geocode(hlocation[i + 1])
@@ -89,7 +94,7 @@ def test(request):
 			'd1': [price[1],price[2],price[3]],
 			'e1': [hlocation[1],hlocation[2],hlocation[3]],
 			'f1': [htype[1],htype[2],htype[3]],
-			'purl': purl
+			'purl': [purl[0],purl[1],purl[2]]
 
 		})
 	else:
@@ -106,7 +111,8 @@ def test(request):
 			'd1': [price[1],price[2],price[3],price[4],price[5]],
 			'e1': [hlocation[1],hlocation[2],hlocation[3],hlocation[4],hlocation[5]],
                         'f1': [htype[1],htype[2],htype[3],htype[4],htype[5]],
-			 'purl': purl
+			'purl': [purl[0],purl[1],purl[2],purl[3],purl[4]]
+		
 
 		})
 
@@ -188,17 +194,18 @@ def hprice(html):
 
 
 
-def scraping(hurl):
-	r = requests.get('%s'%hurl[1])
-	content_type_encoding = r.encoding if r.encoding != 'ISO-8859-1' else None
-	soup = BeautifulSoup(r.content, 'html.parser', from_encoding=content_type_encoding)
-#	soup = BeautifulSoup(r.content,"lxml")
-	for link in soup.find_all("link", rel="canonical"):
-		purl=link['href']
-
-	url = purl + "plan/"
-	print(url)
-	r = requests.get(url)
+def scraping(hurl,x):
+	url=[" "]*6
+	for i in range (x):
+		r = requests.get('%s'%hurl[i+1])
+		content_type_encoding = r.encoding if r.encoding != 'ISO-8859-1' else None
+		soup = BeautifulSoup(r.content, 'html.parser', from_encoding=content_type_encoding)
+#		soup = BeautifulSoup(r.content,"lxml")
+		for link in soup.find_all("link", rel="canonical"):
+			purl=link['href']
+		url[i] = purl + "plan/"
+#	print(url)
+	r = requests.get(url[0])
 	content_type_encoding = r.encoding if r.encoding != 'ISO-8859-1' else None
 	soup = BeautifulSoup(r.content, 'html.parser', from_encoding=content_type_encoding)
 #	soup = BeautifulSoup(r.content,"lxml")
