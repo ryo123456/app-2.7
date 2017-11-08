@@ -11,8 +11,12 @@ import xml.dom.minidom
 import xml.etree.ElementTree as ET
 import requests
 import lxml.html
+import time
+import signal
 from bs4 import BeautifulSoup
 from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
+
 
 ENCODING = 'utf-8'
 @csrf_protect
@@ -63,10 +67,12 @@ def test(request):
 				htype = result(html,5)
 				if x==3:
 					purl = scraping(hurl,3)
+					price2 = jtb(hotel,3)
 				elif x>=5:
 					purl = scraping(hurl,5)
-				price2 = jtb(hotel)	
-				#print(purl)
+					price2 = jtb(hotel,5)
+				#price2 = jtb(hotel)	
+				print(price2)
 				for i in range(x):
 					geo = geocode(hlocation[i + 1])
 					dom = xml.dom.minidom.parseString(geo)
@@ -224,29 +230,27 @@ def scraping(hurl,x):
 	return url
 
 
-def jtb(hotel):
-	driver = webdriver.PhantomJS()
-	driver.get('http://www.jtb.co.jp/')
-	driver.find_element_by_name('search').send_keys("%s"%hotel[1])
-	driver.find_element_by_class_name('gsc-search-button').click()
-	#for a in driver.find_element_by_css_selector('div > a'):
-	#link = driver.find_element_by_tag_name('a')
-	#for a in link:
-	#	print a.get_attribute('href')	
-	#for a in driver.find_element_by_xpath('//*[@id="___gcse_0"]/div/div/div/div[5]/div[2]/div/div/div[1]/div[1]/div[1]/div/a'):
-	#	print(a.href)
+def jtb(hotel,x):
+	url=[" "]*6
+	for i in range(x):
+		href=[""]
+		driver = webdriver.PhantomJS()
+		driver.get('http://www.jtb.co.jp/')
+		print(driver.title)
+		driver.find_element_by_id('gsc-i-id1').send_keys("%s"%hotel[i+1])
+    		driver.find_element_by_xpath('//*[@id="___gcse_0"]/div/form/table[1]/tbody/tr/td[2]/input').send_keys(Keys.ENTER)	
+		soup = BeautifulSoup(driver.page_source,"lxml")
+		for a in soup.find_all("a", class_="gs-title"):
+        		try:
+				href.append(a['href'])
 
-
+			except KeyError:
+				pass
+		url[i] = href[1]
+		driver.service.process.send_signal(signal.SIGTERM)
+		driver.quit()
+	return url
 	
-	#url = "http://www.jtb.co.jp/search/?q=" + hotel[1]
-	#print (url)
-	#r = requests.get(url)
-	#print(r)
-	#content_type_encoding = r.encoding if r.encoding != 'ISO-8859-1' else None
-        #soup = BeautifulSoup(r.content, 'html.parser', from_encoding=content_type_encoding)
-	#print(soup)
-	#for a in soup.find_all("a", class_="gs-title"):
-	#	print(a.href)
 	
 
 
