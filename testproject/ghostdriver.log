@@ -1,12 +1,12 @@
-[INFO  - 2017-11-08T02:50:12.518Z] GhostDriver - Main - running on port 58038
-[INFO  - 2017-11-08T02:50:13.441Z] Session [8b1ab5e0-c42f-11e7-ad34-1d1d6e4752c5] - page.settings - {"XSSAuditingEnabled":false,"javascriptCanCloseWindows":true,"javascriptCanOpenWindows":true,"javascriptEnabled":true,"loadImages":true,"localToRemoteUrlAccessEnabled":false,"userAgent":"Mozilla/5.0 (Unknown; Linux x86_64) AppleWebKit/538.1 (KHTML, like Gecko) PhantomJS/2.1.1 Safari/538.1","webSecurityEnabled":true}
-[INFO  - 2017-11-08T02:50:13.441Z] Session [8b1ab5e0-c42f-11e7-ad34-1d1d6e4752c5] - page.customHeaders:  - {}
-[INFO  - 2017-11-08T02:50:13.441Z] Session [8b1ab5e0-c42f-11e7-ad34-1d1d6e4752c5] - Session.negotiatedCapabilities - {"browserName":"phantomjs","version":"2.1.1","driverName":"ghostdriver","driverVersion":"1.2.0","platform":"linux-unknown-64bit","javascriptEnabled":true,"takesScreenshot":true,"handlesAlerts":false,"databaseEnabled":false,"locationContextEnabled":false,"applicationCacheEnabled":false,"browserConnectionEnabled":false,"cssSelectorsEnabled":true,"webStorageEnabled":false,"rotatable":false,"acceptSslCerts":false,"nativeEvents":true,"proxy":{"proxyType":"direct"}}
-[INFO  - 2017-11-08T02:50:13.441Z] SessionManagerReqHand - _postNewSessionCommand - New Session Created: 8b1ab5e0-c42f-11e7-ad34-1d1d6e4752c5
-[ERROR - 2017-11-08T02:50:15.044Z] Session [8b1ab5e0-c42f-11e7-ad34-1d1d6e4752c5] - page.onError - msg: TypeError: null is not an object (evaluating 'LA.href')
+[INFO  - 2017-11-14T06:48:37.752Z] GhostDriver - Main - running on port 43993
+[INFO  - 2017-11-14T06:48:38.645Z] Session [d8261d20-c907-11e7-a0e9-15c22bfcb465] - page.settings - {"XSSAuditingEnabled":false,"javascriptCanCloseWindows":true,"javascriptCanOpenWindows":true,"javascriptEnabled":true,"loadImages":true,"localToRemoteUrlAccessEnabled":false,"userAgent":"Mozilla/5.0 (Unknown; Linux x86_64) AppleWebKit/538.1 (KHTML, like Gecko) PhantomJS/2.1.1 Safari/538.1","webSecurityEnabled":true}
+[INFO  - 2017-11-14T06:48:38.646Z] Session [d8261d20-c907-11e7-a0e9-15c22bfcb465] - page.customHeaders:  - {}
+[INFO  - 2017-11-14T06:48:38.646Z] Session [d8261d20-c907-11e7-a0e9-15c22bfcb465] - Session.negotiatedCapabilities - {"browserName":"phantomjs","version":"2.1.1","driverName":"ghostdriver","driverVersion":"1.2.0","platform":"linux-unknown-64bit","javascriptEnabled":true,"takesScreenshot":true,"handlesAlerts":false,"databaseEnabled":false,"locationContextEnabled":false,"applicationCacheEnabled":false,"browserConnectionEnabled":false,"cssSelectorsEnabled":true,"webStorageEnabled":false,"rotatable":false,"acceptSslCerts":false,"nativeEvents":true,"proxy":{"proxyType":"direct"}}
+[INFO  - 2017-11-14T06:48:38.646Z] SessionManagerReqHand - _postNewSessionCommand - New Session Created: d8261d20-c907-11e7-a0e9-15c22bfcb465
+[ERROR - 2017-11-14T06:48:39.132Z] Session [d8261d20-c907-11e7-a0e9-15c22bfcb465] - page.onError - msg: TypeError: null is not an object (evaluating 'LA.href')
 
   phantomjs://platform/console++.js:263 in error
-[ERROR - 2017-11-08T02:50:15.044Z] Session [8b1ab5e0-c42f-11e7-ad34-1d1d6e4752c5] - page.onError - stack:
+[ERROR - 2017-11-14T06:48:39.133Z] Session [d8261d20-c907-11e7-a0e9-15c22bfcb465] - page.onError - stack:
   memberLoginArea2012 (http://www.jtb.co.jp/:404)
 
   phantomjs://platform/console++.js:263 in error

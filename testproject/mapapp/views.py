@@ -13,6 +13,7 @@ import requests
 import lxml.html
 import time
 import signal
+import re
 from bs4 import BeautifulSoup
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
@@ -71,7 +72,17 @@ def test(request):
 				elif x>=5:
 					purl = scraping(hurl,5)
 					price2 = jtb(hotel,5)
-				#price2 = jtb(hotel)	
+					x=5 
+				for i in range(x):
+					r = re.compile("([^,]*)(/)(.*)")
+					try:
+						m = r.match("%s"%price2[i])
+						ss=m.group(1)+m.group(2)
+						price2[i]=ss
+					except AttributeError:
+						pass
+					
+				
 				print(price2)
 				for i in range(x):
 					geo = geocode(hlocation[i + 1])
@@ -236,7 +247,7 @@ def jtb(hotel,x):
 		href=[""]
 		driver = webdriver.PhantomJS()
 		driver.get('http://www.jtb.co.jp/')
-		print(driver.title)
+		#print(driver.title)
 		driver.find_element_by_id('gsc-i-id1').send_keys("%s"%hotel[i+1])
     		driver.find_element_by_xpath('//*[@id="___gcse_0"]/div/form/table[1]/tbody/tr/td[2]/input').send_keys(Keys.ENTER)	
 		soup = BeautifulSoup(driver.page_source,"lxml")
@@ -251,10 +262,5 @@ def jtb(hotel,x):
 		driver.quit()
 	return url
 	
-	
-
-
-
-
-	
-
+def comparison():
+	print("hello")	
